@@ -13,8 +13,21 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'HomeController@index')
+    ->name('admin')
+    ->middleware('role:user');
+
+
+/*orders*/
+Route::get('/orders', function () {
+    return view('orders.default');
+})->name('orders');
+
+/*manage users*/
+Route::get('/admin/users/{i}', function () {
+    return view('users.manage');
+})->name('admin.users');

@@ -4,7 +4,7 @@
 
     <div class="columns is-mobile">
 
-        <div class="column is-three-fifths is-offset-one-fifth">
+        <div class="column is-6-tablet is-12-mobile is-offset-3-tablet is-gapless">
 
 
             <form class="form-horizontal" method="POST" action="{{ route('register') }}">

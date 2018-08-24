@@ -52,12 +52,12 @@
                     <div class="navbar-item">
                         <div class="field is-grouped">
                             <p class="control">
-                                <a class="button is-primary is-outlined" href="{{ route('login') }}">
+                                <a class="button is-primary is-outlined is-inverted" href="{{ route('login') }}">
                                     <span>Login</span>
                                 </a>
                             </p>
                             <p class="control">
-                                <a class="button is-primary is-outlined" href="{{ route('register') }}">
+                                <a class="button is-primary is-inverted" href="{{ route('register') }}">
                                     <span>Register</span>
                                 </a>
                             </p>
