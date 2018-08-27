@@ -13,38 +13,29 @@
 
         <div id="navMenuColorprimary-example" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="https://bulma.io/">
-                    Home
-                </a>
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="/documentation/overview/start/">
-                        Docs
-                    </a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="/documentation/overview/start/">
-                            Overview
-                        </a>
-                        <a class="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
-                            Modifiers
-                        </a>
-                        <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                            Columns
-                        </a>
-                        <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">
-                            Layout
-                        </a>
-                        <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
-                            Form
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item" href="https://bulma.io/documentation/elements/box/">
-                            Elements
-                        </a>
-                        <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-                            Components
-                        </a>
-                    </div>
-                </div>
+                @if (isset($menu))
+
+                    @foreach($menu as $item)
+                        @if (isset($item->children))
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif>
+                                    {{$item->name}}
+                                </a>
+                                <div class="navbar-dropdown">
+                                    @foreach($item->children as $child)
+                                        <a class="navbar-item" href="{{ $child->url }}"@if($child->target != "") target="{{$child->target}}" @endif @if($child->nofollow)rel="nofollow" @endif>
+                                            {{$child->name}}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <a class="navbar-item" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif>
+                                {{$item->name}}
+                            </a>
+                        @endif
+                    @endforeach
+                @endif
             </div>
 
             <div class="navbar-end">

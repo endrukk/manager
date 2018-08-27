@@ -11,12 +11,12 @@ class CheckRole
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next)
     {
-        if (! $request->user()->hasRole($role)) {
+        if ( intval($request->user()->role_id) <= 0 ) {
+            /*user has no role*/
             return redirect(route('home'));
         }
 

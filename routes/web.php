@@ -17,9 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/dashboard', 'HomeController@index')
+Route::get('/admin/dashboard', 'Admin\AdminHomeController@init')
     ->name('admin')
-    ->middleware('role:user');
+    ->middleware();
+
+Route::get('/admin/menus/list', 'Admin\AdminMenuController@getList')
+    ->name('admin.menu.list')
+    ->middleware();
 
 
 /*orders*/

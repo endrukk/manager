@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    @yield('header_css')
     <meta name="csrf-token" id="global_csrf_token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@if(isset($page_name) && $page_name != ''){{$page_name}}@else{{ config('app.name', 'Laravel') }}@endif</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/bulma.css') }}" rel="stylesheet">
+    @yield('header_css')
+
 </head>
 <body>
     <div id="app">
-        @include('includes.navigator')
+        @include('includes.navigation')
 
         <div class="section">
             @yield('content')
