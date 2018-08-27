@@ -11,6 +11,7 @@
     <title>@if(isset($page_name) && $page_name != ''){{$page_name}}@else{{ config('app.name', 'Laravel') }}@endif</title>
 
     <!-- Styles -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     <link href="{{ asset('css/bulma.css') }}" rel="stylesheet">
     @yield('header_css')
 
@@ -20,7 +21,10 @@
         @include('includes.navigation')
 
         <div class="section">
-            @yield('content')
+            <h1 class="title is-2">@if(isset($page_name) && $page_name != ''){{$page_name}}@else{{ config('app.name', 'Laravel') }}@endif</h1>
+            <div class="columns">
+                @yield('content')
+            </div>
         </div>
 
         @include('includes.footer')
@@ -28,6 +32,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/bulma.js') }}"></script>
-    @yield('footer_js')
+    @include('includes.footer_scripts')
 </body>
 </html>

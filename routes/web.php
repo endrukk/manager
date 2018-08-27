@@ -24,6 +24,15 @@ Route::get('/admin/dashboard', 'Admin\AdminHomeController@init')
 Route::get('/admin/menus/list', 'Admin\AdminMenuController@getList')
     ->name('admin.menu.list')
     ->middleware();
+Route::get('/admin/menus/edit/{i}', 'Admin\AdminMenuController@edit')
+    ->name('admin.menu.edit')
+    ->middleware();
+Route::get('/admin/menus/delete/{i}', 'Admin\AdminMenuController@delete')
+    ->name('admin.menu.delete')
+    ->middleware();
+Route::get('/admin/menus/activation/{i}', 'Admin\AdminMenuController@activation')
+    ->name('admin.menu.activation')
+    ->middleware();
 
 
 /*orders*/

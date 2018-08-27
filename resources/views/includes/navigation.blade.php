@@ -13,10 +13,10 @@
 
         <div id="navMenuColorprimary-example" class="navbar-menu">
             <div class="navbar-start">
-                @if (isset($menu))
+                @if (isset($menu) && is_array($menu))
 
                     @foreach($menu as $item)
-                        @if (isset($item->children))
+                        @if (isset($item->children) && is_array($item->children))
                             <div class="navbar-item has-dropdown is-hoverable">
                                 <a class="navbar-link" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif>
                                     {{$item->name}}

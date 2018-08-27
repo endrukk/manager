@@ -18,6 +18,7 @@ class CreateMenuMenuItemTable extends Migration
                 $table->integer('menu_id')->unsigned();
                 $table->integer('menu_item_id')->unsigned();
                 $table->integer('parent_id')->nullable()->unsigned();
+                $table->integer('position')->default(0)->unsigned();
             $table->timestamps();
         });
     }

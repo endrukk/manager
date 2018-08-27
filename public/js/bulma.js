@@ -3,8 +3,20 @@
 (function() {
     var burger = document.querySelector('.burger');
     var menu = document.querySelector('#'+burger.dataset.target);
+
     burger.addEventListener('click', function() {
         burger.classList.toggle('is-active');
         menu.classList.toggle('is-active');
     });
+
+
+    var dropdown = document.querySelector('.dropdown');
+
+    if(typeof(dropdown) !== 'undefined' && dropdown !== null)
+        dropdown.addEventListener('click', function(event) {
+            event.stopPropagation();
+            dropdown.classList.toggle('is-active');
+        });
+
 })();
+

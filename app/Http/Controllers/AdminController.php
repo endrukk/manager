@@ -42,20 +42,31 @@ class AdminController extends Controller
     /**
      * Add Css to the header
      *
-     * @param $style:string the script we add to the header, route from the public/css directory
+     * @param $style:string the script we add to the header
+     * @param $in_project:bool true: route from the public/css directory | false: a remote css link
      * @return \Illuminate\Http\Response
      */
-    public function setStyle($style){
+    public function setStyle($style, $in_project = true){
         /*TODO*/
     }
 
     /**
      * Add Css to the header
      *
-     * @param $script:string the script we add to the header, route from the public/js directory
-     * @return \Illuminate\Http\Response
+     * @param $script:string the script we add to the header
+     * @param $in_project:bool true: route from the public/js directory | false: a remote js link
+     * @param $defer:bool whether or not if we defer the script
+     * @return void
      */
-    public function setScript($script){
-        /*TODO*/
+    public function setScript($script, $in_project = true, $position = 0, $defer = false){
+        /*TODO setting the position of the script*/
+
+        if($in_project && is_string($script) ){
+            $this->data['footer_scripts'][] =
+                '<script href="' . asset($script) . '"></script>';
+        }elseif (!$in_project){
+            $this->data['footer_scripts'][] = $script;
+        }
+
     }
 }
