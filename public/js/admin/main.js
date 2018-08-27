@@ -1,36 +1,51 @@
-(function(){
-    var droppable = new Draggable.Droppable(document.querySelectorAll(".drag > ul"), {
-        draggable: "li",
-        droppable: "ul"
-    });
+$( function() {
 
-    droppable.on("droppable:over", function() {
-        $("ul").removeClass("draggable-droppable--occupied");
-        console.log("droppable:over")
-    });
-    droppable.on("droppable:out", () => console.log("droppable:out"));
+    $( "#menu_item_drag, #menu_final" ).sortable({
+        connectWith: ".drag-drop-area",
 
-    function Drag() {
-        $.get("https://api.coinmarketcap.com/v1/ticker/?limit=5").done(function(
-            data
-        ) {
-            $.map(data, function(data) {
-                let resultMarkup = liResult(data);
-                $("#coin-drag").append(resultMarkup);
-            });
+        tolerance:'intersect',
+        update: function( event, ui ) {
+            if ($('#menu_final > .item_' + ui.item.attr('id')).length === 0 &&
+                !ui.item.parent().hasClass('children') ) {
+                ui.item.after('<div class="children drag-drop-area item_' + ui.item.attr('id') + '"></div>');
+                $('#menu_final .children').sortable({
+                    connectWith: ".drag-drop-area",
+                    tolerance: 'intersect',
+                }).disableSelection();
+            }
+        },
+        over:function(event,ui){
+
+        },
+        receive:function(event, ui){
+            calcWidth($(this).siblings('.title'));
+        },
+    }).disableSelection();
+
+    function calcWidth(obj){
+        console.log('---- calcWidth -----');
+
+        var titles =
+            $(obj).siblings('.space').children('.route').children('.title');
+
+        $(titles).each(function(index, element){
+            var pTitleWidth = parseInt($(obj).css('width'));
+            var leftOffset = parseInt($(obj).siblings('.space').css('margin-left'));
+
+            var newWidth = pTitleWidth - leftOffset;
+
+            if ($(obj).attr('id') == 'title0'){
+                console.log("called");
+
+                newWidth = newWidth - 10;
+            }
+
+            $(element).css({
+                'width': newWidth,
+            })
+
+            calcWidth(element);
         });
+
     }
-
-    function liResult(data) {
-        const markup = `<li>        
-            <h2> ${data.name} </h2>
-            <p id='price-btc'> ${data.price_btc} </p>
-            <p id='price-usd'> ${data.price_usd} </p>
-
-        </li>`;
-        return markup;
-    }
-
-    Drag();
-
-})();
+} );

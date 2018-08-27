@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
 use App\Models\Menu;
+use App\Models\MenuItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -71,10 +72,18 @@ class AdminMenuController extends AdminController
     /**
      * edit a given menu item
     */
-    public function edit(){
-        $this->setScript('    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
-        $this->setScript('<script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.2/lib/draggable.min.js"></script>', false);
-        $this->setScript('/js/admin/main.js');
+    public function edit($id){
+        $this->setScript('<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
+        $this->setScript('/jquery-ui-1.12.1.custom/jquery-ui.min.js');
+        $this->setScript('/admin/main.js');
+
+        $menus = Menu::getMenuByID(intval($id));
+        $this->data['menuItems'] = MenuItem::all();
+
+//        echo '<pre>';
+//        die(var_dump(
+//            $menus
+//        ));
 
         return view('admin.menus.edit', $this->data);
     }

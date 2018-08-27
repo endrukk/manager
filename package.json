@@ -20,6 +20,5 @@
     },
     "dependencies": {
         "bulma": "^0.7.1",
-        "dragula": "^3.7.2"
     }
 }

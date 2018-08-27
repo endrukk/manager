@@ -63,7 +63,7 @@ class AdminController extends Controller
 
         if($in_project && is_string($script) ){
             $this->data['footer_scripts'][] =
-                '<script href="' . asset($script) . '"></script>';
+                '<script  type="text/javascript" src="' . asset('/js' . $script) . '"></script>';
         }elseif (!$in_project){
             $this->data['footer_scripts'][] = $script;
         }

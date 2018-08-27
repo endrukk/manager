@@ -31,7 +31,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/bulma.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bulma.js') }}"></script>
     @include('includes.footer_scripts')
 </body>
 </html>
