@@ -72,7 +72,9 @@ class AdminMenuController extends AdminController
      * edit a given menu item
     */
     public function edit(){
-        $this->setScript('/js/back/main.js');
+        $this->setScript('    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
+        $this->setScript('<script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.2/lib/draggable.min.js"></script>', false);
+        $this->setScript('/js/admin/main.js');
 
         return view('admin.menus.edit', $this->data);
     }
