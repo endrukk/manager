@@ -77,7 +77,7 @@ class AdminMenuController extends AdminController
         $this->setScript('/jquery-ui-1.12.1.custom/jquery-ui.min.js');
         $this->setScript('/admin/main.js');
 
-        $menus = Menu::getMenuByID(intval($id));
+        $this->data['menuCurrent'] = Menu::getMenuByID(intval($id));
         $this->data['menuItems'] = MenuItem::all();
 
 //        echo '<pre>';
