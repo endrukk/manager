@@ -1,11 +1,14 @@
 $( function() {
 
-    $(document).ready(function () {
-        $(".drag-drop-area").sortable({
-            connectWith: ".drag-drop-area",
-            opacity: 0.7,
-            delay: 150,
-        }).disableSelection();
+    $('.sortable').nestedSortable({
+        forcePlaceholderSize: true,
+        items: 'li',
+        handle: 'span',
+        placeholder: 'menu-highlight',
+        listType: 'ul',
+        connectWith: '.sortable',
+        maxLevels: 2,
+        opacity: .6,
     });
 
 } );

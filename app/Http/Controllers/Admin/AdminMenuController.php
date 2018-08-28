@@ -75,6 +75,7 @@ class AdminMenuController extends AdminController
     public function edit($id){
         $this->setScript('<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
         $this->setScript('/jquery-ui-1.12.1.custom/jquery-ui.min.js');
+        $this->setScript('/jquery-ui-1.12.1.custom/nested_sortable.js');
         $this->setScript('/admin/main.js');
 
         $this->data['menuCurrent'] = Menu::getMenuByID(intval($id));
