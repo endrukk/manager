@@ -88,8 +88,6 @@ class Menu extends Model
      */
     public static function getMenuByID($id){
 
-
-
         $result = DB::table('menus AS m')
             ->join('menu_menu_item AS mmi', 'm.id', '=', 'mmi.menu_id')
             ->join('menu_items AS mi', 'mi.id', '=', 'mmi.menu_item_id')

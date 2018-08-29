@@ -48,6 +48,12 @@ class AdminController extends Controller
      */
     public function setStyle($style, $in_project = true){
         /*TODO*/
+        if($in_project && is_string($style) ){
+            $this->data['footer_scripts'][] =
+                '<link  rel="stylesheet" href="' . asset('/css' . $style) . '"></script>';
+        }elseif (!$in_project){
+            $this->data['footer_scripts'][] = $style;
+        }
     }
 
     /**

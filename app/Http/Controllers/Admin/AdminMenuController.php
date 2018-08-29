@@ -74,16 +74,11 @@ class AdminMenuController extends AdminController
     */
     public function edit($id){
         $this->setScript('<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
-        $this->setScript('/jquery-ui-1.12.1.custom/jquery-ui.min.js');
-        $this->setScript('/admin/main.js');
+        $this->setScript('/admin/dbushell/jquery.nestable.js');
+        $this->setScript('/admin/nested_menu.js');
 
         $this->data['menuCurrent'] = Menu::getMenuByID(intval($id));
         $this->data['menuItems'] = MenuItem::all();
-
-//        echo '<pre>';
-//        die(var_dump(
-//            $menus
-//        ));
 
         return view('admin.menus.edit', $this->data);
     }
