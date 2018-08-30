@@ -220,27 +220,59 @@
         #nestable2 .dd-list .dd-item .dd-list .dd-item .is-large{
             font-size: 1rem;
         }
+        #nestable2 > .dd-list > .dd-item > .is-primary{
+            font-size: 1.25rem;
+        }
     </style>
 
     <div class="column is-11-fullhd is-offset-1-fullhd is-12-desktop is-gapless">
+
+        <div class="actions columns">
+            <div class="control">
+                <input class="input" type="text" placeholder="Name">
+            </div>
+
+            <div class="control">
+                <div class="select">
+                    <label for="menu_role"></label>
+                    <select name="role" id="menu_role">
+                        <option>Select dropdown</option>
+                        <option>With options</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control">
+                <label for="menu_type"></label>
+                <select name="role" id="menu_type">
+                        <option>Select dropdown</option>
+                        <option>With options</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="save_menu" class="is-pulled-right button is-success">Save</button>
+        </div>
         <div class="drag columns">
 
             <div class="column is-4">
                 <div class="dd" id="nestable">
                     <ol class="dd-list">
-                        @foreach($menuItems as $item)
-                            <li class="dd-item" data-id="{{$item->id}}">
-                                <div class="dd-handle is-block tag is-primary is-large">Item {{$item->id}}</div>
-                            </li>
-                        @endforeach
+                        @if(isset($menuItems))
+                            @foreach($menuItems as $item)
+                                <li class="dd-item" data-id="{{$item->id}}">
+                                    <div class="dd-handle is-block tag is-primary is-large">Item {{$item->id}}</div>
+                                </li>
+                            @endforeach
+                        @else
+                            <div class="dd-empty"></div>
+                        @endif
                     </ol>
                 </div>
             </div>
 
             <div class="column is-8">
-                @if(isset($menuCurrent) && is_array($menuCurrent))
-
-                    <div class="dd" id="nestable2">
+                <div class="dd" id="nestable2">
+                    @if(isset($menuCurrent) && is_array($menuCurrent))
                         <ol class="dd-list">
                             @foreach($menuCurrent as $item)
                                 <li class="dd-item" data-id="{{$item->id}}">
@@ -257,9 +289,10 @@
                                 </li>
                             @endforeach
                         </ol>
-                    </div>
-
-                @endif
+                    @else
+                        <div class="dd-empty"></div>
+                    @endif
+                </div>
             </div>
 
         </div>

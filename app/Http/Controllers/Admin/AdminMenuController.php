@@ -79,7 +79,11 @@ class AdminMenuController extends AdminController
         $this->setScript('/admin/nested_menu.js');
 
         $this->data['menuCurrent'] = Menu::getMenuByID(intval($id));
-        $this->data['menuItems'] = MenuItem::all();
+        $this->data['menuItems'] = DB::table('menu_items AS mi')
+            ->leftJoin('menu_menu_item AS mmi', 'mmi.menu_item_id', '=', 'mi.id')
+            ->whereNull('mmi.menu_id')
+            ->select('mi.*')
+            ->get();
         $this->data['menuID'] = $id;
 
         return view('admin.menus.edit', $this->data);
@@ -91,6 +95,10 @@ class AdminMenuController extends AdminController
     public function process(Request $request){
         $menuID = intval($request->input('id'));
         $menu = json_decode($request->input('menu'));
+
+        if($menuID === 0){
+//            $menuID = new Menu()-save
+        }
 
         $insert = [];
 
@@ -124,9 +132,17 @@ class AdminMenuController extends AdminController
 
     /**
      * delete a given menu item
+     * @id int: the id of the deleted menu
     */
-    public function delete(){
+    public function delete($id){
 
+
+        DB::table('menu_menu_item')
+            ->where('menu_id', $id)
+            ->delete();
+        $menu = Menu::destroy($id);
+
+        return redirect(route('admin.menu.list'));
     }
 
     /**

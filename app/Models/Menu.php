@@ -23,7 +23,7 @@ class Menu extends Model
     /**
      * Selects and generates the user menu
      *
-     * @param is_front:boolean|bool:false
+     * @param bool:is_front
      * @return menu:string|bool:false
      */
     public function getUserMenu($is_front = true){

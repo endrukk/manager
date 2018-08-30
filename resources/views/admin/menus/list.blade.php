@@ -2,6 +2,9 @@
 
 @section('content')
     <div class="column is-11-fullhd is-offset-1-fullhd is-12-desktop is-gapless">
+        <div class="actions">
+            <a href="{{route('admin.menu.edit', 0)}}" class="is-pulled-right button is-success">New Meun</a>
+        </div>
         <table class="table" style="width: 100%">
             @if($table_content)
                 <thead>
