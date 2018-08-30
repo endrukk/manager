@@ -10,15 +10,14 @@ use Illuminate\Support\Facades\Route;
 
 class Menu extends Model
 {
-
-    public function menuItems()
-    {
-        return $this->belongsToMany(MenuItem::class);
-    }
-
     public function role()
     {
         return $this->hasMany(Role::class);
+    }
+
+    public function menuItems()
+    {
+        return $this->belongsToMany(MenuItem::class, 'menu_menu_item');
     }
 
     /**

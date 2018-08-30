@@ -217,6 +217,9 @@
             float: left;
             height: 35px;
         }
+        #nestable2 .dd-list .dd-item .dd-list .dd-item .is-large{
+            font-size: 1rem;
+        }
     </style>
 
     <div class="column is-11-fullhd is-offset-1-fullhd is-12-desktop is-gapless">
@@ -245,7 +248,7 @@
                                     @if (isset($item->children) && is_array($item->children))
                                         <ol class="dd-list children">
                                             @foreach($item->children as $child)
-                                                <li class="dd-item" data-id="{{$child->id}}" data-parent="{{$item->id}}">
+                                                <li class="dd-item" data-id="{{$child->id}}">
                                                     <div class="dd-handle is-block tag is-primary">Item {{$child->id}}</div>
                                                 </li>
                                             @endforeach
@@ -260,6 +263,10 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="ajax-actions is-hidden">
+        <p id="menu_fom_action" data-menu-id="{{ $menuID }}">{{ route('admin.menu.process') }}</p>
     </div>
 
 @endsection
