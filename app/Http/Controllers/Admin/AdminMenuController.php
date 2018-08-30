@@ -103,13 +103,13 @@ class AdminMenuController extends AdminController
                         'parent_id' => $item->id,
                     ];
                 }
-            }else{
-                $insert[] = [
-                    'menu_id' => $menuID,
-                    'menu_item_id' => $item->id,
-                    'parent_id' => null,
-                ];
             }
+
+            $insert[] = [
+                'menu_id' => $menuID,
+                'menu_item_id' => $item->id,
+                'parent_id' => null,
+            ];
         }
         if(is_array($insert) && sizeof($insert) > 0){
             /*drop old menu*/
