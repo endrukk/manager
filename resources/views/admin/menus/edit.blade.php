@@ -225,77 +225,124 @@
         }
     </style>
 
-    <div class="column is-11-fullhd is-offset-1-fullhd is-12-desktop is-gapless">
+    <div class="columns">
+        <div class=" column is-12">
+            <form action="{{route('admin.menu.process')}}" method="post">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Settings</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control is-expanded">
+                                <input class="input" name="name" type="text" placeholder="Name" value="@if( old('name') !== NULL ){{ old('name') }}@elseif(isset($menuCurrent->name)){{$menuCurrent->name}}@endif" />
+                            </p>
+                        </div>
 
-        <div class="actions columns">
-            <div class="control">
-                <input class="input" type="text" placeholder="Name">
-            </div>
-
-            <div class="control">
-                <div class="select">
-                    <label for="menu_role"></label>
-                    <select name="role" id="menu_role">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
-                    </select>
-                </div>
-            </div>
-            <div class="control">
-                <label for="menu_type"></label>
-                <select name="role" id="menu_type">
-                        <option>Select dropdown</option>
-                        <option>With options</option>
-                    </select>
-                </div>
-            </div>
-
-            <button id="save_menu" class="is-pulled-right button is-success">Save</button>
-        </div>
-        <div class="drag columns">
-
-            <div class="column is-4">
-                <div class="dd" id="nestable">
-                    <ol class="dd-list">
-                        @if(isset($menuItems))
-                            @foreach($menuItems as $item)
-                                <li class="dd-item" data-id="{{$item->id}}">
-                                    <div class="dd-handle is-block tag is-primary is-large">Item {{$item->id}}</div>
-                                </li>
-                            @endforeach
-                        @else
-                            <div class="dd-empty"></div>
-                        @endif
-                    </ol>
-                </div>
-            </div>
-
-            <div class="column is-8">
-                <div class="dd" id="nestable2">
-                    @if(isset($menuCurrent) && is_array($menuCurrent))
-                        <ol class="dd-list">
-                            @foreach($menuCurrent as $item)
-                                <li class="dd-item" data-id="{{$item->id}}">
-                                    <div class="dd-handle tag is-block is-primary is-large">Item {{$item->id}}</div>
-                                    @if (isset($item->children) && is_array($item->children))
-                                        <ol class="dd-list children">
-                                            @foreach($item->children as $child)
-                                                <li class="dd-item" data-id="{{$child->id}}">
-                                                    <div class="dd-handle is-block tag is-primary">Item {{$child->id}}</div>
-                                                </li>
+                        <div class="field-body">
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="role">
+                                            <option value="">Select role</option>
+                                            @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{$role->name}}</option>
                                             @endforeach
-                                        </ol>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ol>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="type">
+                                            <option value="">Select type</option>
+                                            <option value="0">Admin</option>
+                                            <option value="1">Front</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="active">
+                                        <span>
+                                            Active
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" name="submitProcessMenu" id="save_menu" class="button is-success">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <input type="hidden" name="menu" id="menu_order" value="" />
+                <input type="hidden" name="id" value="{{ $menuID }}" />
+
+
+                {{ csrf_field() }}
+            </form>
+        </div>
+    </div>
+
+    <div class="columns">
+
+        <div class="column is-4">
+            <div class="dd" id="nestable">
+                <ol class="dd-list">
+                    @if(isset($menuItems))
+                        @foreach($menuItems as $item)
+                            <li class="dd-item" data-id="{{$item->id}}">
+                                <div class="dd-handle is-block tag is-primary is-large">Item {{$item->id}}</div>
+                            </li>
+                        @endforeach
                     @else
                         <div class="dd-empty"></div>
                     @endif
-                </div>
+                </ol>
             </div>
-
         </div>
+
+        <div class="column is-8">
+            <div class="dd" id="nestable2">
+                @if(isset($menuCurrent) && is_array($menuCurrent))
+                    <ol class="dd-list">
+                        @foreach($menuCurrent as $item)
+                            <li class="dd-item" data-id="{{$item->id}}">
+                                <div class="dd-handle tag is-block is-primary is-large">Item {{$item->id}}</div>
+                                @if (isset($item->children) && is_array($item->children))
+                                    <ol class="dd-list children">
+                                        @foreach($item->children as $child)
+                                            <li class="dd-item" data-id="{{$child->id}}">
+                                                <div class="dd-handle is-block tag is-primary">Item {{$child->id}}</div>
+                                            </li>
+                                        @endforeach
+                                    </ol>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ol>
+                @else
+                    <div class="dd-empty"></div>
+                @endif
+            </div>
+        </div>
+
     </div>
 
     <div class="ajax-actions is-hidden">

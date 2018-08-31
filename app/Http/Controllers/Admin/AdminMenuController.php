@@ -6,11 +6,21 @@ use App\Http\Controllers\AdminController;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\MenuMenuItem;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AdminMenuController extends AdminController
 {
+
+    private $menuValidation =
+        [
+            'menu' => 'required',
+            'name' => 'required|string|max:255|unique:menus',
+            'type' => 'required',
+            'role' => 'required',
+        ];
 
     public function __construct()
     {
@@ -34,19 +44,20 @@ class AdminMenuController extends AdminController
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function getList(){
+    public function getList()
+    {
         $this->data['page_name'] = 'Menus list';
 
         $menus = DB::table('menus AS m')
             ->join('roles AS r', 'r.id', '=', 'm.role_id')
-            ->select('m.id','m.name','m.is_front AS front','m.active','m.created_at AS created', 'm.updated_at AS updated', 'r.name AS role')
+            ->select('m.id', 'm.name', 'm.is_front AS front', 'm.active', 'm.created_at AS created', 'm.updated_at AS updated', 'r.name AS role')
             ->get();
 
 
-        foreach ($menus as &$menu){
+        foreach ($menus as &$menu) {
 
-            $menu->created = date('Y m d',strtotime($menu->created));
-            $menu->updated = date('Y m d',strtotime($menu->updated));
+            $menu->created = date('Y m d', strtotime($menu->created));
+            $menu->updated = date('Y m d', strtotime($menu->updated));
 
             $menu->actions[] = array(
                 'name' => 'Edit',
@@ -54,7 +65,7 @@ class AdminMenuController extends AdminController
                 'route' => route('admin.menu.edit', $menu->id),
             );
             $menu->actions[] = array(
-                'name' => ((intval($menu->active) == 0) ? 'Activate': 'Deactivate'),
+                'name' => ((intval($menu->active) == 0) ? 'Activate' : 'Deactivate'),
                 'icon' => 'fas fa-power-off',
                 'route' => route('admin.menu.activation', $menu->id),
             );
@@ -70,10 +81,12 @@ class AdminMenuController extends AdminController
 
         return view('admin.menus.list', $this->data);
     }
+
     /**
      * edit layout for a given menu item
-    */
-    public function edit($id){
+     */
+    public function edit($id)
+    {
         $this->setScript('<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>', false);
         $this->setScript('/admin/dbushell/jquery.nestable.js');
         $this->setScript('/admin/nested_menu.js');
@@ -81,30 +94,49 @@ class AdminMenuController extends AdminController
         $this->data['menuCurrent'] = Menu::getMenuByID(intval($id));
         $this->data['menuItems'] = DB::table('menu_items AS mi')
             ->leftJoin('menu_menu_item AS mmi', 'mmi.menu_item_id', '=', 'mi.id')
-            ->whereNull('mmi.menu_id')
+            ->where('mmi.menu_id', '<>', $id)
+            ->orWhereNull('mmi.menu_id')
+            ->orderBy('mi.id', 'asc')
             ->select('mi.*')
             ->get();
         $this->data['menuID'] = $id;
+        $this->data['roles'] = Role::all();
 
         return view('admin.menus.edit', $this->data);
     }
 
     /**
      * manage or update a given menu item
-    */
-    public function process(Request $request){
+     */
+    public function process(Request $request)
+    {
         $menuID = intval($request->input('id'));
         $menu = json_decode($request->input('menu'));
 
-        if($menuID === 0){
-//            $menuID = new Menu()-save
+        $request->validate($this->menuValidation);
+
+        $name = $request->input('name');
+        $is_front = $request->input('type');
+        $role = $request->input('role');
+        $active = intval($request->input('active'));
+
+
+        if ($menuID === 0) {
+            /* Create new menu */
+            $newMenu = new Menu();
+            $newMenu->name = $name;
+            $newMenu->is_front = $is_front;
+            $newMenu->active = $active;
+            $newMenu->role_id = $role;
+            $newMenu->save();
+            $menuID = $newMenu->id;
         }
 
         $insert = [];
 
-        foreach ($menu as $item){
-            if(isset($item->children) && is_array($item->children) ){
-                foreach ($item->children as $child){
+        foreach ($menu as $item) {
+            if (isset($item->children) && is_array($item->children)) {
+                foreach ($item->children as $child) {
                     $insert[] = [
                         'menu_id' => $menuID,
                         'menu_item_id' => $child->id,
@@ -119,7 +151,7 @@ class AdminMenuController extends AdminController
                 'parent_id' => null,
             ];
         }
-        if(is_array($insert) && sizeof($insert) > 0){
+        if (is_array($insert) && sizeof($insert) > 0) {
             /*drop old menu*/
             DB::table('menu_menu_item')
                 ->where('menu_id', $menuID)
@@ -128,13 +160,15 @@ class AdminMenuController extends AdminController
             DB::table('menu_menu_item')->insert($insert);
         }
 
+        return redirect(route('admin.menu.edit', $menuID));
     }
 
     /**
      * delete a given menu item
      * @id int: the id of the deleted menu
-    */
-    public function delete($id){
+     */
+    public function delete($id)
+    {
 
 
         DB::table('menu_menu_item')
@@ -147,10 +181,11 @@ class AdminMenuController extends AdminController
 
     /**
      * toggle item activation
-     * @var $id:int the id of the menu item to deactivate
+     * @var $id :int the id of the menu item to deactivate
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function activation($id){
+    public function activation($id)
+    {
         $menu = Menu::find($id);
         $menu->active = !intval($menu->active);
         $menu->save();

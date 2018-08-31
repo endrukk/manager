@@ -22,9 +22,18 @@
 
         <div class="section">
             <h1 class="title is-2">@if(isset($page_name) && $page_name != ''){{$page_name}}@else{{ config('app.name', 'Laravel') }}@endif</h1>
-            <div class="columns">
-                @yield('content')
-            </div>
+            @if ($errors->any())
+                <div class="notification is-danger">
+                    <h2 class="title is-5 is-marginless">Error</h2>
+                    <button class="delete"></button>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @yield('content')
         </div>
 
         @include('includes.footer')

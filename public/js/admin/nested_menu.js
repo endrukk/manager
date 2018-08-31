@@ -36,23 +36,28 @@ $( function() {
     });
 
 
+    $('#menu_order').val(processMenuOrder());
     $(document).on('change', '#nestable2', function(){
-        let CSRF_TOKEN = $('#global_csrf_token').attr('content');
-
-        $.ajax({
-            url: $('.ajax-actions #menu_fom_action').text(),
-            type: 'POST',
-            data: {
-                _token: CSRF_TOKEN,
-                menu: processMenuOrder(),
-                id: $('.ajax-actions #menu_fom_action').attr('data-menu-id'),
-            },
-            dataType: 'JSON',
-            success: function (data) {
-                console.log(data);
-            }
-        });
+        $('#menu_order').val(processMenuOrder());
     });
+
+    // $(document).on('change', '#nestable TESE', function(){
+    //     let CSRF_TOKEN = $('#global_csrf_token').attr('content');
+    //
+    //     $.ajax({
+    //         url: $('.ajax-actions #menu_fom_action').text(),
+    //         type: 'POST',
+    //         data: {
+    //             _token: CSRF_TOKEN,
+    //             menu: processMenuOrder(),
+    //             id: $('.ajax-actions #menu_fom_action').attr('data-menu-id'),
+    //         },
+    //         dataType: 'JSON',
+    //         success: function (data) {
+    //             console.log(data);
+    //         }
+    //     });
+    // });
 
 } );
 
