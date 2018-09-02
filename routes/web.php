@@ -21,6 +21,7 @@ Route::get('/admin/dashboard', 'Admin\AdminHomeController@init')
     ->name('admin')
     ->middleware();
 
+/* MENU */
 Route::get('/admin/menus/list', 'Admin\AdminMenuController@getList')
     ->name('admin.menu.list')
     ->middleware();
@@ -35,6 +36,11 @@ Route::get('/admin/menus/delete/{id}', 'Admin\AdminMenuController@delete')
     ->middleware();
 Route::get('/admin/menus/activation/{id}', 'Admin\AdminMenuController@activation')
     ->name('admin.menu.activation')
+    ->middleware();
+
+/* MENU ITEM */
+Route::post('/admin/menu-items/process/', 'Admin\AdminMenuItemController@process')
+    ->name('admin.menu_item.process')
     ->middleware();
 
 

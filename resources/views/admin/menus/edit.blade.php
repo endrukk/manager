@@ -344,9 +344,82 @@
         </div>
 
     </div>
+    <div class="columns">
+        <div class="column is-12">
+            <button data-action="{{ route('admin.menu_item.process', 0) }}" data-toggle="modal_nem_menu_item" id="new_menu_item" class="button is-success modal-open">
+                New menu item
+            </button>
+        </div>
+    </div>
 
-    <div class="ajax-actions is-hidden">
-        <p id="menu_fom_action" data-menu-id="{{ $menuID }}">{{ route('admin.menu.process') }}</p>
+    <div class="modal" id="modal_nem_menu_item">
+        <div class="modal-background modal-closer"></div>
+        <div class="modal-card">
+            <form action="{{route('admin.menu.process')}}" method="post">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">New menu item</p>
+                    <button class="delete modal-closer" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+
+                    <div class="field">
+                        <div class="control">
+                            <label class="label">Name</label>
+                            <input class="input" type="text" placeholder="Name">
+                        </div>
+                    </div>
+
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <div class="select">
+                                    <select name="link_type">
+                                        <option value="">Link type</option>
+                                        <option>Route</option>
+                                        <option>Link</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <div class="select">
+                                    <select name="url_type">
+                                        <option value="">Open</option>
+                                        <option value="_blank">Blank</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Link</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Link" value="">
+                        </div>
+                        {{--<p class="help is-danger">This email is invalid</p>--}}
+                    </div>
+
+
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" name="nofollow">
+                                <span>
+                                    Nofollow
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" type="submit">Save changes</button>
+                    <button class="button modal-closer">Cancel</button>
+                </footer>
+            </form>
+        </div>
     </div>
 
 @endsection
