@@ -41,18 +41,40 @@ $( function() {
         $('#menu_order').val(processMenuOrder());
     });
 
-    $(document).on('click', '#new_menu_item', function(){
-        let CSRF_TOKEN = $('#global_csrf_token').attr('content');
-
+    $(document).on('submit', '#menu_item_form', function(e){
+        e.preventDefault();
+        $('#new_item_validation_errors').html('');
         $.ajax({
-            url: $('.ajax-actions #menu_fom_action').text(),
+            url: $(this).attr('action'),
             type: 'POST',
-            data: {
-                _token: CSRF_TOKEN,
-            },
-            dataType: 'JSON',
+            data: $(this).serialize(),
             success: function (data) {
-                console.log(data);
+                $('#nestable > .dd-list').append(
+                  '<li class="dd-item" data-id="' + data['id'] + '">' +
+                      '<div class="dd-handle is-block tag is-primary is-large">' + data['name'] + '</div>' +
+                  '</li>'
+                );
+
+                $('#menu_item_form input[type=text], #menu_item_form select').val("")
+                    .removeClass('is-error');
+                $('#menu_item_form .notification').addClass("is-hidden");
+
+                $('.modal').removeClass('is-active');
+            },
+            error: function (data) {
+                let errors = data.responseJSON.errors;
+                for(let i in errors) {
+                    if (errors.hasOwnProperty(i)) {
+                        $('#new_item_validation_errors').append(
+                            '<li>' +
+                            errors[i][0] +
+                            '</li>');
+
+                        $('#menu_item_form input[name=' + i +']').addClass('is-danger');
+                        $('#menu_item_form select[name=' + i +']').parent().addClass('is-danger');
+                    }
+                }
+                $('#menu_item_form .notification').removeClass("is-hidden");
             }
         });
     });

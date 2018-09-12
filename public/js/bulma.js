@@ -5,7 +5,8 @@
         dropdown = document.querySelector('.dropdown'),
         menu = document.querySelector('#'+burger.dataset.target),
         modalClosers = document.getElementsByClassName('modal-closer'),
-        modalOpen = document.querySelector('.modal-open');
+        modalOpen = document.querySelector('.modal-open'),
+        notificationClose = document.querySelector('.notificetion .delete');
 
     burger.addEventListener('click', function() {
         burger.classList.toggle('is-active');
@@ -32,6 +33,13 @@
                 event.stopPropagation();
                 modal.classList.remove('is-active');
             });
+        });
+
+    if(typeof(notificationClose) !== 'undefined' && notificationClose !== null && notificationClose.length > 0)
+        notificationClose.addEventListener('click', function(event) {
+            event.stopPropagation();
+            let notification = notificationClose.parentElement.nodeName;
+            notification.classList.add('is-hidden');
         });
 
 })();

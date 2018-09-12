@@ -148,11 +148,11 @@
         @media only screen and (min-width: 700px) {
             .dd {
                 float: left;
-                width: 48%;
+                width: 100%;
             }
 
             .dd + .dd {
-                margin-left: 2%;
+                margin-left: 0%;
             }
         }
 
@@ -225,200 +225,180 @@
         }
     </style>
 
-    <div class="columns">
-        <div class=" column is-12">
-            <form action="{{route('admin.menu.process')}}" method="post">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Settings</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control is-expanded">
-                                <input class="input" name="name" type="text" placeholder="Name" value="@if( old('name') !== NULL ){{ old('name') }}@elseif(isset($menuCurrent->name)){{$menuCurrent->name}}@endif" />
-                            </p>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <form action="{{route('admin.menu.process')}}" method="post">
+                        <div class="form-row">
+                            <h2>Settings</h2>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group col-sm-4 col-xs-12">
+                                <input class="form-control" name="name" type="text" placeholder="Name" value="@if( old('name') !== NULL ){{ old('name') }}@elseif(isset($menuCurrent->name)){{$menuCurrent->name}}@endif" />
+                            </div>
 
-                        <div class="field-body">
-                            <div class="field is-narrow">
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select name="role">
+                            <div class="form-group col-sm-6 col-xs-12">
+                                <div class="form-row">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <select class="form-control" name="role">
                                             <option value="">Select role</option>
                                             @foreach($roles as $role)
                                             <option value="{{$role->id}}">{{$role->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="field is-narrow">
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select name="type">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <select class="form-control" name="type">
                                             <option value="">Select type</option>
                                             <option value="0">Admin</option>
                                             <option value="1">Front</option>
                                         </select>
                                     </div>
+
+                                    <div class="col-sm-4 col-xs-12">
+                                        <div class="custom-control custom-checkbox-lg custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="activeMenu" name="active">
+                                            <label class="custom-control-label" for="activeMenu">
+                                                Active
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="field is-narrow">
-                                <div class="control">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="active">
-                                        <span>
-                                            Active
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="field">
-                            <div class="control">
-                                <button type="submit" name="submitProcessMenu" id="save_menu" class="button is-success">
+                            <div class="col-sm-2 col-xs12">
+                                <button type="submit" name="submitProcessMenu" id="save_menu" class="btn btn-success form-control">
                                     Save
                                 </button>
                             </div>
                         </div>
 
+                        <input type="hidden" name="menu" id="menu_order" value="" />
+                        <input type="hidden" name="id" value="{{ $menuID }}" />
+                        {{ csrf_field() }}
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-4 col-xs-12">
+                    <div class="dd" id="nestable">
+                        <ol class="dd-list">
+                            @if(isset($menuItems))
+                                @foreach($menuItems as $item)
+                                    <li class="dd-item" data-id="{{$item->id}}">
+                                        <div class="dd-handle badge badge-primary">
+                                            <h5>
+                                                {{$item->name}}
+                                            </h5>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @else
+                                <div class="dd-empty"></div>
+                            @endif
+                        </ol>
                     </div>
+
+                    <div class="col-xs-12">
+                        <button id="new_menu_item" class="btn btn-success"  data-toggle="modal" data-target="#modal_nem_menu_item">
+                            New menu item
+                        </button>
+                    </div>
+
                 </div>
 
-
-
-                <input type="hidden" name="menu" id="menu_order" value="" />
-                <input type="hidden" name="id" value="{{ $menuID }}" />
-
-
-                {{ csrf_field() }}
-            </form>
-        </div>
-    </div>
-
-    <div class="columns">
-
-        <div class="column is-4">
-            <div class="dd" id="nestable">
-                <ol class="dd-list">
-                    @if(isset($menuItems))
-                        @foreach($menuItems as $item)
-                            <li class="dd-item" data-id="{{$item->id}}">
-                                <div class="dd-handle is-block tag is-primary is-large">Item {{$item->id}}</div>
-                            </li>
-                        @endforeach
-                    @else
-                        <div class="dd-empty"></div>
-                    @endif
-                </ol>
-            </div>
-        </div>
-
-        <div class="column is-8">
-            <div class="dd" id="nestable2">
-                @if(isset($menuCurrent) && is_array($menuCurrent))
-                    <ol class="dd-list">
-                        @foreach($menuCurrent as $item)
-                            <li class="dd-item" data-id="{{$item->id}}">
-                                <div class="dd-handle tag is-block is-primary is-large">Item {{$item->id}}</div>
-                                @if (isset($item->children) && is_array($item->children))
-                                    <ol class="dd-list children">
-                                        @foreach($item->children as $child)
-                                            <li class="dd-item" data-id="{{$child->id}}">
-                                                <div class="dd-handle is-block tag is-primary">Item {{$child->id}}</div>
-                                            </li>
-                                        @endforeach
-                                    </ol>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ol>
-                @else
-                    <div class="dd-empty"></div>
-                @endif
-            </div>
-        </div>
-
-    </div>
-    <div class="columns">
-        <div class="column is-12">
-            <button data-action="{{ route('admin.menu_item.process', 0) }}" data-toggle="modal_nem_menu_item" id="new_menu_item" class="button is-success modal-open">
-                New menu item
-            </button>
-        </div>
-    </div>
-
-    <div class="modal" id="modal_nem_menu_item">
-        <div class="modal-background modal-closer"></div>
-        <div class="modal-card">
-            <form action="{{route('admin.menu.process')}}" method="post">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">New menu item</p>
-                    <button class="delete modal-closer" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-
-                    <div class="field">
-                        <div class="control">
-                            <label class="label">Name</label>
-                            <input class="input" type="text" placeholder="Name">
-                        </div>
+                <div class="col-sm-8 col-xs-12">
+                    <div class="dd" id="nestable2">
+                        @if(isset($menuCurrent) && is_array($menuCurrent))
+                            <ol class="dd-list">
+                                @foreach($menuCurrent as $item)
+                                    <li class="dd-item" data-id="{{$item->id}}">
+                                        <div class="dd-handle tag is-block is-primary is-large">Item {{$item->id}}</div>
+                                        @if (isset($item->children) && is_array($item->children))
+                                            <ol class="dd-list children">
+                                                @foreach($item->children as $child)
+                                                    <li class="dd-item" data-id="{{$child->id}}">
+                                                        <div class="dd-handle is-block tag is-primary">{{$child->name}}</div>
+                                                    </li>
+                                                @endforeach
+                                            </ol>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ol>
+                        @else
+                            <div class="dd-empty"></div>
+                        @endif
                     </div>
 
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <div class="select">
-                                    <select name="link_type">
-                                        <option value="">Link type</option>
-                                        <option>Route</option>
-                                        <option>Link</option>
-                                    </select>
-                                </div>
-                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal_nem_menu_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New menu item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="newMenuItemName" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="newMenuItemName" name="name">
                         </div>
 
-                        <div class="field">
-                            <div class="control">
-                                <div class="select">
-                                    <select name="url_type">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-sm-6 xs-12">
+                                    <label for="selectLinkType" class="col-form-label">Link type</label>
+                                    <select class="form-control" name="link_type" id="selectLinkType">
+                                        <option value="">Link type</option>
+                                        <option value="1">Route</option>
+                                        <option value="2">Link</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 xs-12">
+                                    <label for="selectUrlType" class="col-form-label">Name</label>
+                                    <select class="form-control" name="url_type" id="selectUrlType">
                                         <option value="">Open</option>
                                         <option value="_blank">Blank</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Link</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="Link" value="">
+
+                        <div class="form-group">
+                            <label for="newMenuItemLink" class="col-form-label">Link:</label>
+                            <input type="text" class="form-control" id="newMenuItemLink" name="uri">
                         </div>
-                        {{--<p class="help is-danger">This email is invalid</p>--}}
-                    </div>
 
-
-                    <div class="field">
-                        <div class="control">
-                            <label class="checkbox">
-                                <input type="checkbox" name="nofollow">
-                                <span>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox-lg custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="newMenuItemNofollow" name="nofollow">
+                                <label class="custom-control-label" for="newMenuItemNofollow">
                                     Nofollow
-                                </span>
-                            </label>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" type="submit">Save changes</button>
-                    <button class="button modal-closer">Cancel</button>
-                </footer>
-            </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">save</button>
+                </div>
+            </div>
         </div>
     </div>
 

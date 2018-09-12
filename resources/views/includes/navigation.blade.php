@@ -1,75 +1,71 @@
-<div class="bd-example is-paddingless">
-    <nav class="navbar is-primary">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
-                Manager
-            </a>
-            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">
+        Manager
+    </a>
 
-        <div id="navMenuColorprimary-example" class="navbar-menu">
-            <div class="navbar-start">
-                @if (isset($menu) && is_array($menu))
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-                    @foreach($menu as $item)
-                        @if (isset($item->children) && is_array($item->children))
-                            <div class="navbar-item has-dropdown is-hoverable">
-                                <a class="navbar-link" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif>
-                                    {{$item->name}}
-                                </a>
-                                <div class="navbar-dropdown">
-                                    @foreach($item->children as $child)
-                                        <a class="navbar-item" href="{{ $child->url }}"@if($child->target != "") target="{{$child->target}}" @endif @if($child->nofollow)rel="nofollow" @endif>
-                                            {{$child->name}}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @else
-                            <a class="navbar-item" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav mr-auto">
+            @if (isset($menu) && is_array($menu))
+
+                @foreach($menu as $item)
+                    @if (isset($item->children) && is_array($item->children))
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow" @endif id="navbarDropdown_{{$item->id}}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{$item->name}}
                             </a>
-                        @endif
-                    @endforeach
-                @endif
-            </div>
-
-            <div class="navbar-end">
-                @guest
-                    <div class="navbar-item">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <a class="button is-primary is-outlined is-inverted" href="{{ route('login') }}">
-                                    <span>Login</span>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a class="button is-primary is-inverted" href="{{ route('register') }}">
-                                    <span>Register</span>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                @else
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link" href="#">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown_{{$item->id}}">
+                                @foreach($item->children as $child)
+                                    <a class="dropdown-item" href="{{ $child->url }}"@if($child->target != "") target="{{$child->target}}" @endif @if($child->nofollow)rel="nofollow" @endif>
+                                        {{$child->name}}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ $item->url }}"@if($item->target != "") target="{{$item->target}}" @endif @if($item->nofollow)rel="nofollow"@endif >
+                                {{$item->name}}
                             </a>
+                        </li>
+                    @endif
+                @endforeach
+            @endif
+        </ul>
+
+        @guest
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('login') }}">
+                        Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}">
+                        Register
+                    </a>
+                </li>
+            </ul>
+        @else
+
+            <ul class="navbar-nav ml-auto hidden-md-down">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUserArea" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownUserArea">
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Logout
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>
-                        </div>
+                        </a>
                     </div>
-                @endguest
-            </div>
-        </div>
-    </nav>
-</div>
+                </li>
+            </ul>
+        @endguest
+    </div>
+</nav>

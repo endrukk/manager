@@ -9,12 +9,11 @@ use Illuminate\Http\Request;
 class AdminMenuItemController extends AdminController
 {
 
-    private $menuValidation =
+    private $menuItemValidation =
         [
-            'menu' => 'required',
-            'name' => 'required|string|max:255|unique:menus',
-            'type' => 'required',
-            'role' => 'required',
+            'name' => 'required|string|max:255',
+            'link_type' => 'required',
+            'uri' => 'required',
         ];
 
     /**
@@ -37,29 +36,42 @@ class AdminMenuItemController extends AdminController
     {
         $menuID = intval($request->input('id'));
 
-//        $request->validate($this->menuValidation);
+        $request->validate($this->menuItemValidation);
 
         $name = $request->input('name');
-        $route = $request->input('route');
-        $link = $request->input('link');
+        $uri = $request->input('uri');
+        $link_type = $request->input('link_type');
         $target = intval($request->input('target'));
         $nofollow = intval($request->input('nofollow'));
 
+        $ajax = intval($request->input('ajax'));
 
         if ($menuID === 0) {
             /* Create new menu */
             $newMenuItem = new MenuItem();
             $newMenuItem->name = $name;
-            $newMenuItem->route = $route;
-            $newMenuItem->link = $link;
+
+            if($link_type == 1)
+                $newMenuItem->route = $uri;
+            else
+                $newMenuItem->link = $uri;
+
             $newMenuItem->target = $target;
             $newMenuItem->nofollow = $nofollow;
             $newMenuItem->save();
-            $menuID = $newMenuItem->id;
         }
 
-        /*TODO: if ajax, return different, else return simething else*/
+        /*TODO: if ajax, return different, else return something else*/
 
-        return redirect(route('admin.menu.edit', $menuID));
+
+        if($ajax === 1){
+            return json_encode(array(
+                'id' => $newMenuItem->id,
+                'name' => $newMenuItem->name
+            ));
+            exit(0);
+        }else{
+            return redirect(route('admin.menu_item.list', $menuID));
+        }
     }
 }
