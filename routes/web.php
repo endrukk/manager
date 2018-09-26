@@ -42,6 +42,12 @@ Route::get('/admin/menus/activation/{id}', 'Admin\AdminMenuController@activation
 Route::post('/admin/menu-items/process/', 'Admin\AdminMenuItemController@process')
     ->name('admin.menu_item.process')
     ->middleware();
+Route::get('/admin/menu-items/list/{page?}', 'Admin\AdminMenuItemController@getList')
+    ->name('admin.menu_item.list')
+    ->middleware();
+//Route::post('/admin/menu-items/process/', 'Admin\AdminMenuItemController@process')
+//    ->name('admin.menu_item.process')
+//    ->middleware();
 
 
 /*orders*/

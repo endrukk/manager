@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\AdminController;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminMenuItemController extends AdminController
 {
+
+    private $menuItemsPerPage = 20;
 
     private $menuItemValidation =
         [
@@ -28,6 +31,46 @@ class AdminMenuItemController extends AdminController
         return view('dashboard', $this->data);
     }
 
+
+    /**
+     * Generate the list of every menu item
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    /*TODO: Paginate, or search, order by*/
+    public function getList($page = 0)
+    {
+
+        $this->data['page_name'] = 'Menus Items list';
+
+
+        $this->data['menu_items'] = DB::table('menu_items AS mi')
+            ->skip($page * $this->menuItemsPerPage)
+            ->take($this->menuItemsPerPage)
+            ->select('mi.*')
+            ->get();
+
+        foreach ($this->data['menu_items'] as &$item) {
+
+            $item->created_at = date('Y m d', strtotime($item->created_at));
+            $item->updated_at = date('Y m d', strtotime($item->updated_at));
+
+
+            $item->actions[] = array(
+                'name' => 'Edit',
+                'icon' => 'fas fa-edit',
+                'route' => route('admin.menu.edit', $item->id),
+            );
+            $item->actions[] = array(
+                'name' => 'Delete',
+                'icon' => 'fas fa-trash-alt',
+                'route' => route('admin.menu.delete', $item->id),
+            );
+
+        }
+
+        return view('admin.menu_items.list', $this->data);
+    }
 
     /**
      * insert or update a given menu item
@@ -74,4 +117,21 @@ class AdminMenuItemController extends AdminController
             return redirect(route('admin.menu_item.list', $menuID));
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getMenuItemsPerPage()
+    {
+        return $this->menuItemsPerPage;
+    }
+
+    /**
+     * @param int $menuItemsPerPage
+     */
+    public function setMenuItemsPerPage($menuItemsPerPage)
+    {
+        $this->menuItemsPerPage = $menuItemsPerPage;
+    }
+
 }
